@@ -5,7 +5,7 @@
   <title>Extracted XPO Invoice Data</title>
   <script src="https://js.zohostatic.com/creator/widgets/version/2.0/widgetsdk-min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f7fa; padding: 0px; }
+    body { font-family: Arial, sans-serif; background: #f5f7fa; padding: 1px; }
     h2 { margin-bottom: 20px; }
     .filter-section { margin-bottom: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .filter-section select,
@@ -44,7 +44,7 @@
   overflow: hidden;
 }
 .city-label {
-  font-size: 15px;
+  font-size: 10px;
   font-weight: bold;
   color: #444;
   background: #f1f1f1;
@@ -61,7 +61,7 @@
 .record.corrected { border-left: 6px solid #4a148c; background-color: #f3e5f5; }
     .header {
   color: white;
-  padding: 12px 16px;
+  padding: 10px 16px;
   font-weight: bold;
   cursor: pointer;
 }
@@ -85,17 +85,17 @@
 
     .shipper-section {
   border: 1px solid #ccc;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   border-radius: 10px;
   background: #f9f9f9;
   overflow: hidden;
 }
 .shipper-header {
   background: #e0e0e0;
-  padding: 10px 15px;
+  padding: 8px 5px;
   font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 10px;
 }
 .shipper-content {
   padding: 10px 20px;
@@ -318,7 +318,12 @@
       container.innerHTML = finalHTML || '<p>No entries</p>';
     }
 
- 
+    setTimeout(() => {
+      setupCopyEvents();
+      setupReviewCheckboxes();
+      setupCollapseToggles();
+    }, 0);
+  }
 
 function setupReviewCheckboxes() {
   // document.querySelectorAll('.mark-reviewed').forEach(box => {
