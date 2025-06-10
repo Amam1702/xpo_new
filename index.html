@@ -29,7 +29,7 @@
       font-weight: bold; border-radius: 6px; cursor: pointer;
     }
     .tab-buttons button.active { background: #1c3f93; color: white; }
-    .tab-section { display: none; padding: 20px 30px; border-radius: 8px; width: calc(100% + 60px); margin-left: -30px; box-sizing: border-box; }
+    .tab-section { display: none; padding: 10px 20px; border-radius: 8px; width: calc(100% + 60px); margin-left: -30px; box-sizing: border-box; }
 .tab-section.active#unreviewed { background-color: #fff7e6; }
 .tab-section.active#reviewed { background-color: #e6f9ed; }
 .tab-section.active#manual { background-color: #fff0e6; }
@@ -55,6 +55,12 @@
 }
 
 .record.unreviewed { border-left: 6px solid #e65100; background-color: #fff3e0; }
+  .header {
+  color: white;
+  padding: 10px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
 .record.reviewed { border-left: 6px solid #1b5e20; background-color: #e8f5e9; }
 .record.manual { border-left: 6px solid #bf360c; background-color: #fbe9e7; }
 .record.balance { border-left: 6px solid #0d47a1; background-color: #e3f2fd; }
@@ -70,9 +76,13 @@
 .record.manual .header { background: #bf360c; }
 .record.balance .header { background: #0d47a1; }
 .record.corrected .header { background: #4a148c; }
-    .content { display: none; padding: 16px; }
+    .content { display: none; padding: 6px; }
     table { width: 100%; border-collapse: collapse; }
-    td, th { padding: 8px 12px; border: 1px solid #ddd; }
+    td, th {
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  font-size: 10px; /* <-- Adjust to your preferred size */
+}
     th { background-color: #f0f0f0; text-align: left; }
     td.copyable { cursor: pointer; background-color: white; transition: background-color 0.3s ease; position: relative; }
     td.copyable:hover { background-color: #eaf2ff; }
@@ -213,7 +223,7 @@
           setTimeout(() => {
             cell.classList.remove('copied');
             tip.style.display = 'none';
-          }, 1000);
+          }, 0);
         });
       });
     });
