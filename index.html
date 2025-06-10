@@ -108,7 +108,7 @@
 <h2>📋 Extracted XPO Invoice Data</h2>
 <div class="filter-section">
   <label for="fieldSelect">Field:</label>
-  <select id="fieldSelect" style="min-width: 160px; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #ccc; padding: 8px 12px; border-radius: 6px; font-size: 14px;"></select></select>
+  <select id="fieldSelect" style="min-width: 160px; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #ccc; padding: 8px 12px; border-radius: 6px; font-size: 14px;"></select>
   <input type="text" id="searchValue" style="min-width: 180px; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #ccc; padding: 8px 12px; border-radius: 6px; font-size: 14px;" placeholder="Search term" />
   <button id="searchButton" style="background-color: #444; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer;">Search</button>
   <label for="startDate">From:</label>
@@ -168,20 +168,20 @@
 
       // After Pro_Number row, insert the custom 4-cell row
       if (key === "Pro_Number") {
-        rows += `<tr><th>${label}</th><td class="copyable" data-copy="${raw || ''}">${val}<span class="tooltip">Copied!</span></td></tr>`;
+        rows += `<tr><th class="copyable" data-copy="${label}">${label}<span class="tooltip">Copied!</span></th><td class="copyable" data-copy="${raw || ''}">${val}<span class="tooltip">Copied!</span></td></tr>`;
         rows += `<tr>
-          <th style="color:#888;">Qty Ship'g Pcs</th>
+          <th class="copyable" style="color:#888;" data-copy="Qty Ship'g Pcs">Qty Ship'g Pcs<span class="tooltip">Copied!</span></th>
           <td class="copyable" data-copy="${qty}">${qty}<span class="tooltip">Copied!</span></td>
         </tr>
         <tr>
-          <th style="color:#888;">-</th>
+          <th class="copyable" style="color:#888;" data-copy="${product}">-<span class="tooltip">Copied!</span></th>
           <td class="copyable" data-copy="${product}">${product}<span class="tooltip">Copied!</span></td>
         </tr>`;
         insertedCustomRow = true;
         continue;
       }
 
-      rows += `<tr><th>${label}</th><td class="copyable" data-copy="${raw || ''}">${val}<span class="tooltip">Copied!</span></td></tr>`;
+      rows += `<tr><th class="copyable" data-copy="${label}">${label}<span class="tooltip">Copied!</span></th><td class="copyable" data-copy="${raw || ''}">${val}<span class="tooltip">Copied!</span></td></tr>`;
     }
 
     if (Array.isArray(record.Accessorials_Line_Items) && record.Accessorials_Line_Items.length > 0) {
@@ -210,7 +210,10 @@
           cell.classList.add('copied');
           const tip = cell.querySelector('.tooltip');
           tip.style.display = 'inline';
-          
+          setTimeout(() => {
+            cell.classList.remove('copied');
+            tip.style.display = 'none';
+          }, 1000);
         });
       });
     });
@@ -323,28 +326,28 @@
   }
 
 function setupReviewCheckboxes() {
-  document.querySelectorAll('.mark-reviewed').forEach(box => {
-    box.addEventListener('change', async function () {
-      if (this.checked) {
-        const id = this.getAttribute('data-id');
-        const config = {
-          report_name: "XPO_Inovice_v1_Report",
-          id: id,
-          payload: { data: { Reviewed: true } }
-        };
-        try {
-          const res = await ZOHO.CREATOR.DATA.updateRecordById(config);
-          if (res.code === 3000) {
-            this.closest('.record').style.opacity = 0.5;
-            const header = this.closest('.record').querySelector('.header');
-            header.textContent += ' ✅ Updated';
-          }
-        } catch (err) {
-          console.warn("❌ Failed to update record:", err);
-        }
-      }
-    });
-  });
+  // document.querySelectorAll('.mark-reviewed').forEach(box => {
+  //   box.addEventListener('change', async function () {
+  //     if (this.checked) {
+  //       const id = this.getAttribute('data-id');
+  //       const config = {
+  //         report_name: "XPO_Inovice_v1_Report",
+  //         id: id,
+  //         payload: { data: { Reviewed: true } }
+  //       };
+  //       try {
+  //         const res = await ZOHO.CREATOR.DATA.updateRecordById(config);
+  //         if (res.code === 3000) {
+  //           this.closest('.record').style.opacity = 0.5;
+  //           const header = this.closest('.record').querySelector('.header');
+  //           header.textContent += ' ✅ Updated';
+  //         }
+  //       } catch (err) {
+  //         console.warn("❌ Failed to update record:", err);
+  //       }
+  //     }
+  //   });
+  // });
 }
 
 function setupCollapseToggles() {
@@ -386,7 +389,7 @@ function setupCollapseToggles() {
     return `${dd}-${m[parseInt(mm) - 1]}-${yyyy}`;
   }
 
-  function fetch(startDateStr, endDateStr) {
+  function fetchData(startDateStr, endDateStr) {
   const start = toZohoDate(startDateStr);
   const end = toZohoDate(endDateStr);
   const url = `https://ew0nbf06x1.execute-api.us-east-2.amazonaws.com/XPO_final_Data_fetch?start_date=${encodeURIComponent(start)}&end_date=${encodeURIComponent(end)}`;
@@ -439,7 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("fetchRange").addEventListener("click", () => {
   const start = document.getElementById("startDate").value;
   const end = document.getElementById("endDate").value;
-  if (start && end) fetch(start, end);
+  if (start && end) fetchData(start, end);
 });
 
   document.getElementById("searchButton").addEventListener("click", () => {
@@ -460,8 +463,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const today = new Date().toISOString().split("T")[0];
 document.getElementById("startDate").value = today;
 document.getElementById("endDate").value = today;
-ZOHO.embeddedApp.init();
-fetch(today, today);
+if (window.ZOHO && ZOHO.embeddedApp && typeof ZOHO.embeddedApp.init === 'function') {
+    ZOHO.embeddedApp.init();
+}
+fetchData(today, today);
     document.querySelector(".tab-buttons button").click();
   });
 </script>
